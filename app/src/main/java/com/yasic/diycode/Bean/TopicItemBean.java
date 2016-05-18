@@ -3,7 +3,7 @@ package com.yasic.diycode.Bean;
 /**
  * Created by Yasic on 2016/5/18.
  */
-public class TopicBean {
+public class TopicItemBean {
     private String title;
     private String type;
     private String icon;
@@ -12,7 +12,7 @@ public class TopicBean {
     private String totalReply;
     private String articleSequence;
 
-    public TopicBean(String title, String type, String icon, String author, String lastReply, String totalReply, String articleSequence) {
+    public TopicItemBean(String title, String type, String icon, String author, String lastReply, String totalReply, String articleSequence) {
         this.title = title;
         this.type = type;
         this.icon = icon;

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.yasic.diycode.Adapter.TopicListAdapter;
-import com.yasic.diycode.Bean.TopicBean;
+import com.yasic.diycode.Bean.TopicItemBean;
 import com.yasic.diycode.Presenter.TopicListPresenter;
 import com.yasic.diycode.R;
 
@@ -32,12 +32,12 @@ public class TopicListView implements BaseViewInterface<Activity, TopicListPrese
         prbTopicList = (ProgressBar) view.findViewById(R.id.prb_TopicList);
     }
 
-    public void setRvTopicList(Context context, final List<TopicBean> topicBeanList){
-        final TopicListAdapter topicListAdapter = new TopicListAdapter(context, topicBeanList);
+    public void setRvTopicList(Context context, final List<TopicItemBean> topicItemBeanList){
+        final TopicListAdapter topicListAdapter = new TopicListAdapter(context, topicItemBeanList);
         topicListAdapter.setOnItemClickListener(new TopicListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-
+                topicListPresenter.startTopicDetailPresenter(topicItemBeanList.get(position).getArticleSequence());
             }
 
             @Override

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.yasic.diycode.Bean.TopicBean;
+import com.yasic.diycode.Bean.TopicItemBean;
 import com.yasic.diycode.R;
 
 import java.util.List;
@@ -16,11 +16,11 @@ import java.util.List;
 /**
  * Created by ESIR on 2016/3/18.
  */
-public class TopicListAdapter extends BaseAdapter<TopicListAdapter.MyViewHolder, TopicBean> {
+public class TopicListAdapter extends BaseAdapter<TopicListAdapter.MyViewHolder, TopicItemBean> {
 
-    public TopicListAdapter(Context context, List<TopicBean> topicBeanList) {
+    public TopicListAdapter(Context context, List<TopicItemBean> topicItemBeanList) {
         this.context = context;
-        this.objectList = topicBeanList;
+        this.objectList = topicItemBeanList;
     }
 
     @Override
