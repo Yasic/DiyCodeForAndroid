@@ -70,15 +70,16 @@ public class TopicModel implements ITopicModel {
         OkhttpUtil okhttpUtil = OkhttpUtil.getInstance();
         final Request request = new Request.Builder().url("http://diycode.cc/topics/" + topicSequence).build();
         try {
-            List<TopicDetailBean> topicDetailBeanList = new ArrayList<>();
             String title;
             String publishTime;
             String author;
             String type;
-            String watchedNumber;
+            //// TODO: 2016/5/19 there is some problems when get watchedNumber
+            String watchedNumber = "";
             String article;
             String headPortrait;
-            List<TopicReplyBean> topicReplyBeanList;
+            String startNumber;
+            List<TopicReplyBean> topicReplyBeanList = new ArrayList<>();
             Response response = okhttpUtil.okHttpClient.newCall(request).execute();
             Document document = Jsoup.parse(response.body().string());
             Element mainElement = document.getElementById("main");
@@ -99,17 +100,77 @@ public class TopicModel implements ITopicModel {
             Elements hacknewsClear = info.get(0).select("a[data-author=true]");
             author = hacknewsClear.text();
 
-
             Elements avatar = panelHeading.select("div.avatar");
             headPortrait = avatar.get(0).getElementsByClass("hacknews_clear").get(0).getElementsByTag("img").get(0).attr("src");
 
             Elements panelBody = topicDetail.get(0).select("div.panel-body");
             Elements articleElement = panelBody.get(0).select("article");
-            Log.i("articleElement", articleElement.text());
+            article = articleElement.text();
+
+            Log.i("startNumber", topicDetail.get(0).select("div.panel-footer").get(0).toString());
+            Log.i("startNumber", topicDetail.get(0).select("div.panel-footer").get(0).getElementsByClass("opts").get(0).toString());
+            startNumber = "";
+            //// TODO: 2016/5/19 startNumber must be got when login in
+            /*startNumber = topicDetail.get(0).select("div.panel-footer").get(0).
+                    getElementsByClass("opts").get(0).
+                    select("a.likeable").attr("data-count");
+            Log.i("startNumber", startNumber);*/
+            topicReplyBeanList = getTopicReplyList(colmdElements, topicReplyBeanList);
+
+            TopicDetailBean topicDetailBean = new TopicDetailBean(title, publishTime, author,
+                    type, watchedNumber, article, headPortrait, startNumber, topicReplyBeanList);
+
+            CallbackBean<TopicDetailBean> topicDetailBeanCallbackBean = new CallbackBean<>("0", "", topicDetailBean);
+            return topicDetailBeanCallbackBean;
         }
         catch (Exception e){
             Log.i("Exception", e.getMessage());
+            CallbackBean<TopicDetailBean> errorCallBackBean = new CallbackBean<>("1", e.getMessage(), null);
+            return errorCallBackBean;
         }
-        return null;
+    }
+
+    private List<TopicReplyBean> getTopicReplyList(Elements colmdElements, List<TopicReplyBean> topicReplyBeanList){
+        String author;
+        String headPortrait;
+        String publishTime;
+        String replyInfo;
+        String startNumber;
+        Element replies = colmdElements.get(0).getElementById("replies");
+        Elements itemPanelBody = replies.select("div.items");
+        Elements replyElements = itemPanelBody.get(0).getElementsByClass("reply");
+        Elements avatar;
+        Elements hacknews_clear;
+        Elements infos;
+        Elements info;
+        Elements name;
+        Elements time;
+        Elements markdown;
+        Elements optsPullRight;
+        Elements likeAble;
+        Elements faThumbsUp;
+        for (int i = 0; i < replyElements.size(); i++){
+            avatar = replyElements.get(i).select("div.avatar");
+            hacknews_clear = avatar.get(0).getElementsByClass("hacknews_clear");
+            headPortrait = hacknews_clear.get(0).select("img.media-object").attr("src");
+
+            infos = replyElements.get(i).select("div.infos");
+            info = infos.get(0).select("div.info");
+            name = info.get(0).getElementsByClass("name");
+            author = name.get(0).getElementsByClass("hacknews_clear").text();
+
+            time = info.get(0).getElementsByClass("time");
+            publishTime = time.get(0).getElementsByTag("abbr").attr("title");
+
+            markdown = infos.get(0).getElementsByClass("markdown");
+            replyInfo = markdown.text();
+
+
+            optsPullRight = info.get(0).select("span.opts");
+            likeAble = optsPullRight.get(0).select("a.likeable");
+            startNumber = likeAble.attr("data-count");
+            topicReplyBeanList.add(new TopicReplyBean(author, headPortrait, replyInfo, publishTime,startNumber));
+        }
+        return topicReplyBeanList;
     }
 }
