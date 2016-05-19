@@ -8,12 +8,14 @@ public class TopicReplyBean {
     private String headPortrait;
     private String replyInfo;
     private String publishTime;
+    private String startNumber;
 
-    public TopicReplyBean(String author, String headPortrait, String replyInfo, String publishTime) {
+    public TopicReplyBean(String author, String headPortrait, String replyInfo, String publishTime, String startNumber) {
         this.author = author;
         this.headPortrait = headPortrait;
         this.replyInfo = replyInfo;
         this.publishTime = publishTime;
+        this.startNumber = startNumber;
     }
 
     public String getAuthor() {
@@ -32,6 +34,10 @@ public class TopicReplyBean {
         return publishTime;
     }
 
+    public String getStartNumber() {
+        return startNumber;
+    }
+
     public void setAuthor(String author) {
         this.author = author;
     }
@@ -46,5 +52,9 @@ public class TopicReplyBean {
 
     public void setPublishTime(String publishTime) {
         this.publishTime = publishTime;
+    }
+
+    public void setStartNumber(String startNumber) {
+        this.startNumber = startNumber;
     }
 }

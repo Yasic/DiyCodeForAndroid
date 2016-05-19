@@ -81,8 +81,30 @@ public class TopicModel implements ITopicModel {
             List<TopicReplyBean> topicReplyBeanList;
             Response response = okhttpUtil.okHttpClient.newCall(request).execute();
             Document document = Jsoup.parse(response.body().string());
-            Element headElements = document.getElementById("main");
-            Log.i("headElements", headElements.toString());
+            Element mainElement = document.getElementById("main");
+            Elements rowElements = mainElement.getElementsByClass("row");
+            Elements colmdElements = rowElements.get(0).getElementsByClass("col-md-9");
+            Elements topicDetail = colmdElements.get(0).select("div.topic-detail");
+            Elements panelHeading = topicDetail.get(0).select("div.panel-heading");
+            Elements mediaBody = panelHeading.get(0).getElementsByClass("media-body");
+            Elements mediaHeading = mediaBody.get(0).select("h1.media-heading");
+            title = mediaHeading.text();
+
+            Elements info = mediaBody.get(0).getElementsByClass("info");
+            Elements node = info.get(0).getElementsByClass("node");
+            type = node.get(0).text();
+
+            publishTime = info.get(0).getElementsByClass("timeago").attr("title");
+
+            Elements hacknewsClear = info.get(0).select("a[data-author=true]");
+            author = hacknewsClear.text();
+
+            Elements avatar = panelHeading.select("div.avatar");
+            headPortrait = avatar.get(0).getElementsByClass("hacknews_clear").get(0).getElementsByTag("img").get(0).attr("src");
+
+            Elements panelBody = topicDetail.get(0).select("div.panel-body");
+            Elements articleElement = panelBody.get(0).select("article");
+            Log.i("articleElement", articleElement.text());
         }
         catch (Exception e){
             Log.i("Exception", e.getMessage());
