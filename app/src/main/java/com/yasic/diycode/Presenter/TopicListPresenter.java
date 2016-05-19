@@ -1,6 +1,7 @@
 package com.yasic.diycode.Presenter;
 
 import android.util.Log;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import com.yasic.diycode.Bean.CallbackBean;
@@ -26,6 +27,13 @@ public class TopicListPresenter extends BasePresenterFragment<TopicListView>{
     protected void onBindBVI() {
         BVIView.setPresenter(this);
         BVIView.initRvTopicList(getActivity().getApplicationContext());
+        BVIView.getView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                BVIView.getView().getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                BVIView.setProgressBarVisible();
+            }
+        });
         getTopicList(1);
     }
 
@@ -51,11 +59,13 @@ public class TopicListPresenter extends BasePresenterFragment<TopicListView>{
                             }
                             Toast.makeText(getContext(), callbackBean.getErrorMessage(), Toast.LENGTH_LONG).show();
                         }
+                        BVIView.setProgressBarGone();
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
                         Log.i("throwable",throwable.getMessage());
+                        BVIView.setProgressBarGone();
                     }
                 });
         return null;

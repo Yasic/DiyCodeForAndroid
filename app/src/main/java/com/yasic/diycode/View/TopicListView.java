@@ -2,13 +2,14 @@ package com.yasic.diycode.View;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import com.yasic.diycode.Adapter.TopicListAdapter;
 import com.yasic.diycode.Bean.TopicItemBean;
@@ -23,13 +24,19 @@ import java.util.List;
 public class TopicListView implements BaseViewInterface<Activity, TopicListPresenter>{
     private View view;
     private RecyclerView rvTopicList;
-    private ProgressBar prbTopicList;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private TopicListPresenter topicListPresenter;
     @Override
     public void init(LayoutInflater inflater, ViewGroup container) {
         view = inflater.inflate(R.layout.fragment_topiclist, container, false);
         rvTopicList = (RecyclerView) view.findViewById(R.id.rv_TopicList);
-        prbTopicList = (ProgressBar) view.findViewById(R.id.prb_TopicList);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.srl_RefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                topicListPresenter.getTopicList(1);
+            }
+        });
     }
 
     public void setRvTopicList(Context context, final List<TopicItemBean> topicItemBeanList){
@@ -49,11 +56,11 @@ public class TopicListView implements BaseViewInterface<Activity, TopicListPrese
     }
 
     public void setProgressBarVisible(){
-        prbTopicList.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setRefreshing(true);
     }
 
     public void setProgressBarGone(){
-        prbTopicList.setVisibility(View.GONE);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     public void initRvTopicList(Context context){
@@ -74,5 +81,9 @@ public class TopicListView implements BaseViewInterface<Activity, TopicListPrese
     @Override
     public void setPresenter(TopicListPresenter topicListPresenter) {
         this.topicListPresenter = topicListPresenter;
+        swipeRefreshLayout.setColorSchemeColors(
+                ContextCompat.getColor(topicListPresenter.getActivity(), R.color.colorPrimary),
+                ContextCompat.getColor(topicListPresenter.getActivity(), R.color.colorAccent),
+                ContextCompat.getColor(topicListPresenter.getActivity(), R.color.colorPrimaryBlue));
     }
 }
