@@ -99,6 +99,7 @@ public class TopicModel implements ITopicModel {
             Elements hacknewsClear = info.get(0).select("a[data-author=true]");
             author = hacknewsClear.text();
 
+
             Elements avatar = panelHeading.select("div.avatar");
             headPortrait = avatar.get(0).getElementsByClass("hacknews_clear").get(0).getElementsByTag("img").get(0).attr("src");
 
