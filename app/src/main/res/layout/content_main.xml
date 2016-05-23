@@ -12,8 +12,8 @@
     tools:context="com.yasic.diycode.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <SurfaceView
+        android:id="@+id/sfv_camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </RelativeLayout>

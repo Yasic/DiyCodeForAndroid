@@ -1,11 +1,11 @@
 package com.yasic.diycode.Presenter;
 
-import android.util.Log;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import com.yasic.diycode.Bean.CallbackBean;
-import com.yasic.diycode.Bean.TopicDetailBean;
 import com.yasic.diycode.Bean.TopicItemBean;
 import com.yasic.diycode.Model.TopicModel;
 import com.yasic.diycode.View.TopicListView;
@@ -64,18 +64,27 @@ public class TopicListPresenter extends BasePresenterFragment<TopicListView>{
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        Log.i("throwable",throwable.getMessage());
-                        BVIView.setProgressBarGone();
+                        try{
+                            BVIView.setProgressBarGone();
+                        }catch (Exception e){
+
+                        }
                     }
                 });
         return null;
     }
 
-    public void startTopicDetailPresenter(final String Sequence){
-        Observable.create(new Observable.OnSubscribe<CallbackBean<List<TopicDetailBean>>>() {
+    public void startTopicDetailPresenter(final String sequence){
+        Intent intent = new Intent(getActivity(), TopicDetailPresenter.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("SEQUENCE", sequence);
+
+        intent.putExtras(bundle);
+        startActivity(intent);
+        /*Observable.create(new Observable.OnSubscribe<CallbackBean<List<TopicDetailBean>>>() {
             @Override
             public void call(Subscriber<? super CallbackBean<List<TopicDetailBean>>> subscriber) {
-                CallbackBean<List<TopicDetailBean>> callbackBean = topicModel.getTopicDetail(Sequence);
+                CallbackBean<List<TopicDetailBean>> callbackBean = topicModel.getTopicDetail(sequence);
                 subscriber.onNext(callbackBean);
                 subscriber.onCompleted();
             }
@@ -98,7 +107,7 @@ public class TopicListPresenter extends BasePresenterFragment<TopicListView>{
                     public void call(Throwable throwable) {
                         Log.i("throwable",throwable.getMessage());
                     }
-                });
+                });*/
     }
 
     @Override

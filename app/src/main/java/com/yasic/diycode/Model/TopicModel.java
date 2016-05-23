@@ -66,7 +66,7 @@ public class TopicModel implements ITopicModel {
     }
 
     @Override
-    public CallbackBean getTopicDetail(String topicSequence) {
+    public CallbackBean<TopicDetailBean> getTopicDetail(String topicSequence) {
         OkhttpUtil okhttpUtil = OkhttpUtil.getInstance();
         final Request request = new Request.Builder().url("http://diycode.cc/topics/" + topicSequence).build();
         try {
@@ -107,15 +107,17 @@ public class TopicModel implements ITopicModel {
             Elements articleElement = panelBody.get(0).select("article");
             article = articleElement.text();
 
-            Log.i("startNumber", topicDetail.get(0).select("div.panel-footer").get(0).toString());
-            Log.i("startNumber", topicDetail.get(0).select("div.panel-footer").get(0).getElementsByClass("opts").get(0).toString());
             startNumber = "";
             //// TODO: 2016/5/19 startNumber must be got when login in
             /*startNumber = topicDetail.get(0).select("div.panel-footer").get(0).
                     getElementsByClass("opts").get(0).
                     select("a.likeable").attr("data-count");
             Log.i("startNumber", startNumber);*/
-            topicReplyBeanList = getTopicReplyList(colmdElements, topicReplyBeanList);
+            Log.i("1", "1");
+            Log.i("ww", String.valueOf(colmdElements.get(0).getElementsByClass("no-result").size() == 0));
+            if (colmdElements.get(0).getElementsByClass("no-result").size() == 0){
+                topicReplyBeanList = getTopicReplyList(colmdElements, topicReplyBeanList);
+            }
 
             TopicDetailBean topicDetailBean = new TopicDetailBean(title, publishTime, author,
                     type, watchedNumber, article, headPortrait, startNumber, topicReplyBeanList);
@@ -149,28 +151,34 @@ public class TopicModel implements ITopicModel {
         Elements optsPullRight;
         Elements likeAble;
         Elements faThumbsUp;
-        for (int i = 0; i < replyElements.size(); i++){
-            avatar = replyElements.get(i).select("div.avatar");
-            hacknews_clear = avatar.get(0).getElementsByClass("hacknews_clear");
-            headPortrait = hacknews_clear.get(0).select("img.media-object").attr("src");
+        try {
+            for (int i = 0; i < replyElements.size(); i++){
+                Log.i("2", "2");
+                avatar = replyElements.get(i).select("div.avatar");
+                hacknews_clear = avatar.get(0).getElementsByClass("hacknews_clear");
+                headPortrait = hacknews_clear.get(0).select("img.media-object").attr("src");
 
-            infos = replyElements.get(i).select("div.infos");
-            info = infos.get(0).select("div.info");
-            name = info.get(0).getElementsByClass("name");
-            author = name.get(0).getElementsByClass("hacknews_clear").text();
+                Log.i("3", "3");
+                infos = replyElements.get(i).select("div.infos");
+                info = infos.get(0).select("div.info");
+                name = info.get(0).getElementsByClass("name");
+                author = name.get(0).getElementsByClass("hacknews_clear").text();
 
-            time = info.get(0).getElementsByClass("time");
-            publishTime = time.get(0).getElementsByTag("abbr").attr("title");
+                time = info.get(0).getElementsByClass("time");
+                publishTime = time.get(0).getElementsByTag("abbr").attr("title");
 
-            markdown = infos.get(0).getElementsByClass("markdown");
-            replyInfo = markdown.text();
+                markdown = infos.get(0).getElementsByClass("markdown");
+                replyInfo = markdown.text();
 
 
-            optsPullRight = info.get(0).select("span.opts");
-            likeAble = optsPullRight.get(0).select("a.likeable");
-            startNumber = likeAble.attr("data-count");
-            topicReplyBeanList.add(new TopicReplyBean(author, headPortrait, replyInfo, publishTime,startNumber));
+                optsPullRight = info.get(0).select("span.opts");
+                likeAble = optsPullRight.get(0).select("a.likeable");
+                startNumber = likeAble.attr("data-count");
+                topicReplyBeanList.add(new TopicReplyBean(author, headPortrait, replyInfo, publishTime,startNumber));
+            }
+            return topicReplyBeanList;
+        }catch (Exception e){
+            return null;
         }
-        return topicReplyBeanList;
     }
 }
