@@ -29,7 +29,7 @@ public class TopicDetailView implements BaseViewInterface<TopicDetailPresenter, 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
+                topicDetailPresenter.getTopicDetail();
             }
         });
     }

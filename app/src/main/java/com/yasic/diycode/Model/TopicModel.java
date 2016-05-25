@@ -105,7 +105,7 @@ public class TopicModel implements ITopicModel {
 
             Elements panelBody = topicDetail.get(0).select("div.panel-body");
             Elements articleElement = panelBody.get(0).select("article");
-            article = articleElement.text();
+            article = articleElement.html();
 
             startNumber = "";
             //// TODO: 2016/5/19 startNumber must be got when login in
@@ -113,8 +113,6 @@ public class TopicModel implements ITopicModel {
                     getElementsByClass("opts").get(0).
                     select("a.likeable").attr("data-count");
             Log.i("startNumber", startNumber);*/
-            Log.i("1", "1");
-            Log.i("ww", String.valueOf(colmdElements.get(0).getElementsByClass("no-result").size() == 0));
             if (colmdElements.get(0).getElementsByClass("no-result").size() == 0){
                 topicReplyBeanList = getTopicReplyList(colmdElements, topicReplyBeanList);
             }
@@ -153,12 +151,10 @@ public class TopicModel implements ITopicModel {
         Elements faThumbsUp;
         try {
             for (int i = 0; i < replyElements.size(); i++){
-                Log.i("2", "2");
                 avatar = replyElements.get(i).select("div.avatar");
                 hacknews_clear = avatar.get(0).getElementsByClass("hacknews_clear");
                 headPortrait = hacknews_clear.get(0).select("img.media-object").attr("src");
 
-                Log.i("3", "3");
                 infos = replyElements.get(i).select("div.infos");
                 info = infos.get(0).select("div.info");
                 name = info.get(0).getElementsByClass("name");

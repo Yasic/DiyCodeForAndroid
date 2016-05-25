@@ -1,13 +1,22 @@
 package com.yasic.diycode.Adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.yasic.diycode.Bean.TopicDetailBean;
 import com.yasic.diycode.Bean.TopicReplyBean;
 import com.yasic.diycode.R;
@@ -62,12 +71,77 @@ public class TopicDetailAdapter extends RecyclerView.Adapter<TopicDetailAdapter.
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         if (getItemViewType(position) == TYPE_HEADER){
             holder.tvTitle.setText(topicDetailBean.getTitle());
             holder.tvType.setText(topicDetailBean.getType());
             holder.tvAuthor.setText(topicDetailBean.getAuthor());
-            holder.tvTopicContent.setText(topicDetailBean.getArticle());
+            Spanned spanned = Html.fromHtml(topicDetailBean.getArticle(), new Html.ImageGetter() {
+                @Override
+                public Drawable getDrawable(final String source) {
+                    ImageLoader imageLoader = ImageLoader.getInstance();
+                    imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+                    imageLoader.loadImage(source,
+                            new ImageLoadingListener() {
+                                @Override
+                                public void onLoadingStarted(String s, View view) {
+
+                                }
+
+                                @Override
+                                public void onLoadingFailed(String s, View view, FailReason failReason) {
+
+                                }
+
+                                @Override
+                                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                                    if (bitmap != null) {
+                                        Drawable drawable = new BitmapDrawable(
+                                                context.getResources(), bitmap);
+                                        drawable.setBounds(0, 0,
+                                                500,
+                                                300);
+                                        holder.tvTopicContent.requestLayout();
+                                        System.out.println("loaded");
+                                    }
+                                }
+
+                                @Override
+                                public void onLoadingCancelled(String s, View view) {
+
+                                }
+                            });
+                    return null;
+                    /*Observable.create(new Observable.OnSubscribe<Drawable>() {
+                        @Override
+                        public void call(Subscriber<? super Drawable> subscriber) {
+                            InputStream inputStream = null;
+                            try {
+                                inputStream = (InputStream)new URL(source).getContent();
+                                Drawable d = Drawable.createFromStream(inputStream, "src");
+                                d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+                                inputStream.close();
+                                subscriber.onNext(d);
+                                subscriber.onCompleted();
+                            }catch (Exception e){
+                                subscriber.onNext(null);
+                                subscriber.onCompleted();
+                            }
+                        }
+                    })
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Action1<Drawable>() {
+                                @Override
+                                public void call(Drawable drawable) {
+                                    holder.tvTopicContent.requestLayout();
+                                }
+                            });*/
+                }
+            }, null);
+            holder.tvTopicContent.setText(spanned);
+            //holder.tvTopicContent.requestLayout();
+            //holder.tvTopicContent.setText(topicDetailBean.getArticle());
             return;
         }
         final int pos = getRealPosition(holder);
@@ -79,7 +153,7 @@ public class TopicDetailAdapter extends RecyclerView.Adapter<TopicDetailAdapter.
         viewHolder.tvReplierNickName.setText(topicReplyBean.getAuthor());
         viewHolder.tvComment.setText(topicReplyBean.getReplyInfo());
         viewHolder.tvPublishTime.setText(topicReplyBean.getPublishTime());
-        viewHolder.btStar.setText(topicReplyBean.getStartNumber());
+        //viewHolder.btStar.setText(topicReplyBean.getStartNumber());
     }
 
     @Override
@@ -99,13 +173,13 @@ public class TopicDetailAdapter extends RecyclerView.Adapter<TopicDetailAdapter.
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
         TextView tvReplierNickName, tvComment, tvPublishTime, tvTitle, tvType, tvAuthor, tvTopicContent;
-        Button btStar;
+        ImageButton btStar;
         public MyViewHolder(View itemView) {
             super(itemView);
             tvReplierNickName = (TextView) itemView.findViewById(R.id.tv_ReplierNickName);
             tvComment = (TextView) itemView.findViewById(R.id.tv_Comment);
             tvPublishTime = (TextView) itemView.findViewById(R.id.tv_PublishTime);
-            btStar = (Button) itemView.findViewById(R.id.bt_Star);
+            btStar = (ImageButton) itemView.findViewById(R.id.bt_Star);
             tvTitle = (TextView) itemView.findViewById(R.id.tv_Title);
             tvType = (TextView) itemView.findViewById(R.id.tv_Type);
             tvAuthor = (TextView) itemView.findViewById(R.id.tv_Author);

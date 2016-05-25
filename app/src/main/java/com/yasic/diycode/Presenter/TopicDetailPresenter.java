@@ -25,7 +25,7 @@ import rx.schedulers.Schedulers;
  */
 public class TopicDetailPresenter extends BasePresenterActivity<TopicDetailView>{
     private TopicModel topicModel = new TopicModel();
-
+    private String SEQUENCE;
     @Override
     protected void onBindBVI() {
         BVIView.setPresenter(this);
@@ -37,14 +37,15 @@ public class TopicDetailPresenter extends BasePresenterActivity<TopicDetailView>
                 BVIView.setSwipeRefreshLayout(true);
             }
         });
-        getTopicDetail(getIntent().getExtras().getString("SEQUENCE"));
+        SEQUENCE = getIntent().getExtras().getString("SEQUENCE");
+        getTopicDetail();
     }
 
-    public void getTopicDetail(final String sequence) {
+    public void getTopicDetail() {
         Observable.create(new Observable.OnSubscribe<CallbackBean<TopicDetailBean>>() {
             @Override
             public void call(Subscriber<? super CallbackBean<TopicDetailBean>> subscriber) {
-                CallbackBean<TopicDetailBean> callbackBean = topicModel.getTopicDetail(sequence);
+                CallbackBean<TopicDetailBean> callbackBean = topicModel.getTopicDetail(SEQUENCE);
                 subscriber.onNext(callbackBean);
                 subscriber.onCompleted();
             }
