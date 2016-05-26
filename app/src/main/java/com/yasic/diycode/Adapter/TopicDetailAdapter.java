@@ -44,10 +44,10 @@ public class TopicDetailAdapter extends RecyclerView.Adapter<TopicDetailAdapter.
         notifyItemInserted(0);
     }
 
-    /*public void addTopicDetailHeaderInfo(List<TopicDetailBean> topicDetailBeanList){
-        this.topicDetailBeanList = topicDetailBeanList;
+    public void refreshData(TopicDetailBean topicDetailBean){
+        this.topicDetailBean = topicDetailBean;
         notifyDataSetChanged();
-    }*/
+    }
 
     @Override
     public int getItemViewType(int position) {

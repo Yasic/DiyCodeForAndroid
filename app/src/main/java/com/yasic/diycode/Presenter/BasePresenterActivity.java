@@ -3,6 +3,7 @@ package com.yasic.diycode.Presenter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.yasic.diycode.View.BaseViewInterface;
 
 /**
@@ -17,6 +18,7 @@ public abstract class BasePresenterActivity<BVI extends BaseViewInterface> exten
         try {
             BVIView = getBVIClass().newInstance();
             BVIView.init(getLayoutInflater(), null);
+            Fresco.initialize(this);
             setContentView(BVIView.getView());
             onBindBVI();
         } catch (InstantiationException e) {

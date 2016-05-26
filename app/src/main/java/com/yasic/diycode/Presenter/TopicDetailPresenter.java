@@ -26,6 +26,7 @@ import rx.schedulers.Schedulers;
 public class TopicDetailPresenter extends BasePresenterActivity<TopicDetailView>{
     private TopicModel topicModel = new TopicModel();
     private String SEQUENCE;
+    private TopicDetailAdapter topicDetailAdapter;
     @Override
     protected void onBindBVI() {
         BVIView.setPresenter(this);
@@ -67,9 +68,14 @@ public class TopicDetailPresenter extends BasePresenterActivity<TopicDetailView>
                             tvType.setText(topicDetailBean.getType());
                             tvAuthor.setText(topicDetailBean.getAuthor());
                             tvTopicContent.setText(topicDetailBean.getArticle());
-                            TopicDetailAdapter adapter = new TopicDetailAdapter(getApplicationContext(), topicDetailBean);
-                            BVIView.getRvTopicDetail().setAdapter(adapter);
-                            adapter.setHeaderView(topicDetailHeader);
+                            if (topicDetailAdapter == null){
+                                topicDetailAdapter = new TopicDetailAdapter(getApplicationContext(), topicDetailBean);
+                                BVIView.getRvTopicDetail().setAdapter(topicDetailAdapter);
+                                topicDetailAdapter.setHeaderView(topicDetailHeader);
+                            }
+                            else {
+                                topicDetailAdapter.refreshData(topicDetailBean);
+                            }
                         } else {
                             if (callbackBean.getErrorMessage() == null || callbackBean.getErrorMessage().equals("")) {
                                 Toast.makeText(getApplicationContext(), "貌似网络出现了错误？", Toast.LENGTH_LONG).show();

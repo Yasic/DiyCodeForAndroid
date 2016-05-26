@@ -70,7 +70,7 @@
             android:layout_width="42dp"
             android:layout_centerVertical="true"
             android:layout_height="wrap_content">
-            <TextView
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/tv_AuthorHeadPortrait"
                 android:gravity="center|center_vertical"
                 android:layout_alignParentRight="true"

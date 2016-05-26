@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.yasic.diycode.View.BaseViewInterface;
 
 /**
@@ -18,6 +19,7 @@ public abstract class BasePresenterFragment<BVI extends BaseViewInterface> exten
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fresco.initialize(getActivity());
     }
 
     @Override
