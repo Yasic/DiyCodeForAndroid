@@ -4,15 +4,18 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -76,6 +79,9 @@ public class TopicDetailAdapter extends RecyclerView.Adapter<TopicDetailAdapter.
             holder.tvTitle.setText(topicDetailBean.getTitle());
             holder.tvType.setText(topicDetailBean.getType());
             holder.tvAuthor.setText(topicDetailBean.getAuthor());
+            Uri uri = Uri.parse(topicDetailBean.getHeadPortrait());
+            Log.i("uri", uri.toString());
+            holder.sdvAuthorHeadPortrait.setImageURI(uri);
             Spanned spanned = Html.fromHtml(topicDetailBean.getArticle(), new Html.ImageGetter() {
                 @Override
                 public Drawable getDrawable(final String source) {
@@ -153,6 +159,8 @@ public class TopicDetailAdapter extends RecyclerView.Adapter<TopicDetailAdapter.
         viewHolder.tvReplierNickName.setText(topicReplyBean.getAuthor());
         viewHolder.tvComment.setText(topicReplyBean.getReplyInfo());
         viewHolder.tvPublishTime.setText(topicReplyBean.getPublishTime());
+        Uri uri = Uri.parse(topicReplyBean.getHeadPortrait());
+        viewHolder.sdvReplierHeadPortrait.setImageURI(uri);
         //viewHolder.btStar.setText(topicReplyBean.getStartNumber());
     }
 
@@ -174,6 +182,7 @@ public class TopicDetailAdapter extends RecyclerView.Adapter<TopicDetailAdapter.
     public class MyViewHolder extends RecyclerView.ViewHolder{
         TextView tvReplierNickName, tvComment, tvPublishTime, tvTitle, tvType, tvAuthor, tvTopicContent;
         ImageButton btStar;
+        SimpleDraweeView sdvReplierHeadPortrait, sdvAuthorHeadPortrait;
         public MyViewHolder(View itemView) {
             super(itemView);
             tvReplierNickName = (TextView) itemView.findViewById(R.id.tv_ReplierNickName);
@@ -184,6 +193,8 @@ public class TopicDetailAdapter extends RecyclerView.Adapter<TopicDetailAdapter.
             tvType = (TextView) itemView.findViewById(R.id.tv_Type);
             tvAuthor = (TextView) itemView.findViewById(R.id.tv_Author);
             tvTopicContent = (TextView) itemView.findViewById(R.id.tv_TopicContent);
+            sdvReplierHeadPortrait = (SimpleDraweeView) itemView.findViewById(R.id.sdv_ReplierHeadPortrait);
+            sdvAuthorHeadPortrait = (SimpleDraweeView) itemView.findViewById(R.id.sdv_AuthorHeadPortrait);
         }
     }
 }
